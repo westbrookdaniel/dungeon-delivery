@@ -3,7 +3,7 @@ import createEnemy from './enemy'
 import createPlayer from './player'
 import createPack from './pack'
 import { Order } from './types'
-import createBench from './bench'
+import createBench, { Bench } from './bench'
 const { KeyCodes } = Phaser.Input.Keyboard
 
 const KEY_BINDINGS = {
@@ -25,7 +25,7 @@ const HEIGHT = 200
 export default class Game extends Phaser.Scene {
   cursors!: KeyBindings
   player!: Phaser.Physics.Matter.Image
-  enemy!: Phaser.Physics.Matter.Image
+  enemies: Phaser.Physics.Matter.Image[] = []
   packs: Phaser.Physics.Matter.Image[] = []
 
   constructor() {
@@ -86,10 +86,32 @@ export default class Game extends Phaser.Scene {
     // camera
     this.cameras.main.startFollow(this.player, true, 0.05, 0.05)
     this.cameras.main.setBounds(0, 0, wallLayer.width, wallLayer.height)
-    // TODO: Make this the way the player is facing
-    // this.cameras.main.followOffset.set(-80, 0)
+    this.cameras.main.deadzone = new Phaser.Geom.Rectangle(
+      WIDTH / 2 - 20,
+      HEIGHT / 2 - 20
+    )
 
-    // enemies
+    const benchs: Bench[] = []
+
+    // object spritemap layers
+    map.objects.forEach((layer) => {
+      switch (layer.name) {
+        case 'enemy':
+          layer.objects.forEach((obj) => {
+            this.enemies.push(createEnemy(this, obj.x!, obj.y!))
+          })
+          break
+        case 'player':
+          // assume theres only one
+          const obj = layer.objects[0]
+          this.player.setPosition(obj.x!, obj.y!)
+          break
+        case 'pack':
+          layer.objects.forEach((obj) => {
+            benchs.push(createBench(this, obj.x!, obj.y!))
+          })
+      }
+    })
     // this.enemy = createEnemy(this, WIDTH - 100, 100)
 
     // orders
@@ -101,31 +123,23 @@ export default class Game extends Phaser.Scene {
     // location can be 'A' or 'B'
     // value can be 1, 2, or 3
     // time limit can be 10s, 20s, or 30sA
-    // const orders: Order[] = [
-    //   { id: getId(), location: 'A', value: 1, timeLimit: 10 },
-    //   { id: getId(), location: 'B', value: 2, timeLimit: 20 },
-    //   { id: getId(), location: 'A', value: 2, timeLimit: 30 },
-    // ]
+    const orders: Order[] = [
+      { id: getId(), location: 'A', value: 1, timeLimit: 10 },
+      { id: getId(), location: 'B', value: 2, timeLimit: 20 },
+      { id: getId(), location: 'A', value: 2, timeLimit: 30 },
+    ]
 
-    // const benchs = [
-    //   createBench(this, 200, HEIGHT - 40),
-    //   createBench(this, 264, HEIGHT - 40),
-    // ]
-
-    // // packages sitting on benches for orders
-    // orders.forEach((order) => {
-    //   const emptyBench = benchs.find((bench) => !bench.order)
-    //   if (!emptyBench) return
-    //   emptyBench.addOrder(order)
-    // })
+    // packages sitting on benches for orders
+    orders.forEach((order) => {
+      const emptyBench = benchs.find((bench) => !bench.order)
+      if (!emptyBench) return
+      emptyBench.addOrder(order)
+    })
   }
 
   update() {
     this.player.update()
-    // this.enemy.update()
-
-    // cleanup destroyed packages
-    this.packs = this.packs.filter((pack) => pack.active)
+    this.enemies.forEach((e) => e.update())
   }
 }
 

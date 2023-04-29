@@ -22,8 +22,8 @@ export default function createEnemy(scene: Game, x: number, y: number) {
     const enemyNearestPack = scene.packs.reduce(
       (nearest, pack) => {
         const distance = Phaser.Math.Distance.Between(
-          scene.enemy.x,
-          scene.enemy.y,
+          enemy.x,
+          enemy.y,
           pack.x,
           pack.y
         )
@@ -35,27 +35,22 @@ export default function createEnemy(scene: Game, x: number, y: number) {
       { distance: Infinity, pack: null as any }
     )
     if (enemyNearestPack && enemyNearestPack.distance < 128) {
-      scene.enemy.setVelocityX(
-        Phaser.Math.Clamp(enemyNearestPack.pack.x - scene.enemy.x, -1, 1)
+      enemy.setVelocityX(
+        Phaser.Math.Clamp(enemyNearestPack.pack.x - enemy.x, -1, 1)
       )
     } else if (distanceToPlayer < 128) {
-      scene.enemy.setVelocityX(
-        Phaser.Math.Clamp(scene.player.x - scene.enemy.x, -1, 1)
-      )
+      enemy.setVelocityX(Phaser.Math.Clamp(scene.player.x - enemy.x, -1, 1))
     }
 
     // if enemy touches package it will be destroyed
     scene.packs.forEach((pack) => {
       const isTouchingPack =
-        Phaser.Math.Distance.Between(
-          scene.enemy.x,
-          scene.enemy.y,
-          pack.x,
-          pack.y
-        ) < 24
+        Phaser.Math.Distance.Between(enemy.x, enemy.y, pack.x, pack.y) < 24
       if (isTouchingPack) {
         scene.matter.world.remove(pack)
         pack.destroy()
+        // cleanup destroyed packages
+        scene.packs = scene.packs.filter((pack) => pack.active)
       }
     })
   }

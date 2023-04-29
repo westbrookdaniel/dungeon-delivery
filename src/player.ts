@@ -31,7 +31,6 @@ export default function createPlayer(scene: Game, x: number, y: number) {
     if (scene.cursors.PRI.isDown) {
       const nearestPack = scene.packs.reduce(
         (nearest, pack) => {
-          if (!pack.active) return nearest
           const distance = Phaser.Math.Distance.Between(
             player.x,
             player.y,
