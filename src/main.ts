@@ -77,6 +77,7 @@ export default class Game extends Phaser.Scene {
     const orders: Order[] = [
       { id: getId(), location: 'A', value: 1, timeLimit: 10 },
       { id: getId(), location: 'B', value: 2, timeLimit: 20 },
+      { id: getId(), location: 'A', value: 2, timeLimit: 30 },
     ]
 
     const benchs = [
