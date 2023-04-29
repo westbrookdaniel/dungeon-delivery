@@ -19,8 +19,9 @@ const getId = () => Math.random().toString(36).substr(2, 9)
 
 type KeyBindings = Record<keyof typeof KEY_BINDINGS, Phaser.Input.Keyboard.Key>
 
-const WIDTH = 250
-const HEIGHT = 200
+// double size so ui is easier to read
+const WIDTH = 250 * 2
+const HEIGHT = 200 * 2
 
 export default class Game extends Phaser.Scene {
   cursors!: KeyBindings
@@ -49,7 +50,11 @@ export default class Game extends Phaser.Scene {
 
   create() {
     // spritemap
-    const map = this.make.tilemap({ key: 'map', tileWidth: 16, tileHeight: 16 })
+    const map = this.make.tilemap({
+      key: 'map',
+      tileWidth: 16,
+      tileHeight: 16,
+    })
     this.tileset = map.addTilesetImage('tileset', 'tiles')!
 
     map.createLayer('bg', this.tileset)!
@@ -81,6 +86,7 @@ export default class Game extends Phaser.Scene {
       WIDTH / 2 - 20,
       HEIGHT / 2 - 20
     )
+    this.cameras.main.setZoom(2)
 
     const benchs: Bench[] = []
 
@@ -112,11 +118,11 @@ export default class Game extends Phaser.Scene {
     // if you don't deliver in time, you lose the value
     // location can be 'A' or 'B'
     // value can be 1, 2, or 3
-    // time limit can be 10s, 20s, or 30sA
+    // time limit in s
     const orders: Order[] = [
-      { id: getId(), location: 'A', value: 1, timeLimit: 10 },
-      { id: getId(), location: 'B', value: 2, timeLimit: 20 },
-      { id: getId(), location: 'A', value: 2, timeLimit: 30 },
+      { id: getId(), location: 'A', value: 1, timeLimit: 20 },
+      { id: getId(), location: 'B', value: 2, timeLimit: 30 },
+      { id: getId(), location: 'A', value: 2, timeLimit: 40 },
     ]
 
     // packages sitting on benches for orders
@@ -124,6 +130,57 @@ export default class Game extends Phaser.Scene {
       const emptyBench = benchs.find((bench) => !bench.order)
       if (!emptyBench) return
       emptyBench.addOrder(order)
+    })
+
+    // TODO: Move this to a separate scene
+    // display orders in ui
+    orders.forEach((order, i) => {
+      // container
+      const container = this.add.container(0, 0)
+      this.cameras.main.ignore(container)
+      container.setPosition(10 + i * 32, 10)
+
+      // card
+      const card = this.add.rectangle(0, 0, 24, 24, 0xffffff)
+      card.setOrigin(0, 0)
+      card.setPosition(0, 0)
+      card.setScrollFactor(0)
+
+      // text
+      const text = this.add.text(0, 0, `${order.location}${order.value}`, {
+        fontSize: '8px',
+        color: '#000',
+        fontFamily: 'PressStart2P',
+        resolution: 10,
+      })
+      text.setOrigin(0, 0)
+      text.setPosition(2, 2)
+      text.setScrollFactor(0)
+
+      // time bar
+      const timeBar = this.add.rectangle(0, 0, 24, 4, 0x000000)
+      timeBar.setOrigin(0, 0)
+      timeBar.setPosition(0, 24)
+      timeBar.setScrollFactor(0)
+
+      // time bar fill
+      const timeBarFill = this.add.rectangle(0, 0, 24, 4, 0x00ff00)
+      timeBarFill.setOrigin(0, 0)
+      timeBarFill.setPosition(0, 24)
+      timeBarFill.setScrollFactor(0)
+
+      // time bar fill tween
+      this.tweens.add({
+        targets: timeBarFill,
+        scaleX: 0,
+        ease: 'Linear',
+        duration: order.timeLimit * 1000,
+        onComplete: () => {
+          console.log('done!', order)
+        },
+      })
+
+      container.add([card, text, timeBar, timeBarFill])
     })
   }
 

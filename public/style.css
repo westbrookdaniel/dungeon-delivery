@@ -27,3 +27,10 @@ canvas {
   margin: 0 auto;
   max-width: 1080px;
 }
+
+@font-face {
+  font-family: PressStart2P;
+  src: local('PressStart2P'), url('./PressStart2P-Regular.ttf');
+  font-weight: normal;
+  font-weight: 400;
+}
