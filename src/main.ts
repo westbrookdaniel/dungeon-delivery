@@ -40,24 +40,14 @@ export default class Game extends Phaser.Scene {
 
     this.load.image('tiles', 'assets/ALL_THE_THINGS.png')
     this.load.tilemapTiledJSON('map', 'assets/tileset.json')
+    this.load.spritesheet('tiles_spr', 'assets/ALL_THE_THINGS.png', {
+      frameWidth: 16,
+      frameHeight: 16,
+    })
   }
 
   create() {
-    // map
-    // home base
-    // 2 delivery points
-    // floor
-    // this.matter.add.imageStack(
-    //   'floor',
-    //   null as any,
-    //   0,
-    //   HEIGHT - 16 * 2,
-    //   25,
-    //   2,
-    //   0,
-    //   0,
-    //   { restitution: 0.4, isStatic: true }
-    // )
+    // spritemap
     const map = this.make.tilemap({ key: 'map', tileWidth: 16, tileHeight: 16 })
     const tileset = map.addTilesetImage('tileset', 'tiles')!
 
@@ -112,7 +102,6 @@ export default class Game extends Phaser.Scene {
           })
       }
     })
-    // this.enemy = createEnemy(this, WIDTH - 100, 100)
 
     // orders
     // list of orders to be fulfilled

@@ -1,7 +1,7 @@
 import Game from './main'
 
 export default function createPlayer(scene: Game, x: number, y: number) {
-  const player = scene.matter.add.image(x, y, 'player')
+  const player = scene.matter.add.sprite(x, y, 'tiles_spr', 237)
   player.setFriction(0.05)
   player.setFrictionAir(0.0005)
   player.setBounce(0.2)
