@@ -176,7 +176,7 @@ export default class Game extends Phaser.Scene {
           this.enemy.y,
           pack.x,
           pack.y
-        ) < 32
+        ) < 24
       if (isTouchingPack) {
         this.matter.world.remove(pack)
         pack.destroy()
