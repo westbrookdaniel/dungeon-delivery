@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser'
 import createEnemy from './enemy'
 import createPlayer from './player'
+import createPack from './pack'
 const { KeyCodes } = Phaser.Input.Keyboard
 
 const KEY_BINDINGS = {
@@ -38,15 +39,7 @@ export default class Game extends Phaser.Scene {
     this.cursors = this.input.keyboard!.addKeys(KEY_BINDINGS) as KeyBindings
 
     // package
-    const pack = this.matter.add.image(100, 100, 'package')
-    pack.setFriction(0.05)
-    pack.setFrictionAir(0.0005)
-    pack.setBounce(0.9)
-    const pack2 = this.matter.add.image(100, 100, 'package')
-    pack2.setFriction(0.05)
-    pack2.setFrictionAir(0.0005)
-    pack2.setBounce(0.9)
-    this.packs = [pack, pack2]
+    this.packs = [createPack(this, 150, 150), createPack(this, 100, 150)]
 
     // floor
     this.matter.add.imageStack(
