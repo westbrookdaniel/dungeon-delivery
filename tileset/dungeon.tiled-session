@@ -33,6 +33,7 @@
     "last.exportedFilePath": "/Users/DanielWestbrook/Sites/dungeon-delivery/public/assets",
     "last.externalTilesetPath": "/Users/DanielWestbrook/Desktop/proj",
     "last.imagePath": "/Users/DanielWestbrook/Desktop/proj",
+    "lastUsedTilesetExportFilter": "JSON tileset files (*.tsj *.json)",
     "map.height": 40,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",

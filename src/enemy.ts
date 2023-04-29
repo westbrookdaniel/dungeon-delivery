@@ -1,8 +1,12 @@
 import Game from './main'
+import { getFrameShapeData } from './utils'
 
 export default function createEnemy(scene: Game, x: number, y: number) {
-  const enemy = scene.matter.add.image(x, y, 'player')
-  enemy.setFriction(0.05)
+  const enemy = scene.matter.add.sprite(x, y, 'tiles_spr', 221, {
+    shape: getFrameShapeData(scene, 221),
+  })
+
+  enemy.setFriction(0.5)
   enemy.setFrictionAir(0.0005)
   enemy.setBounce(0.2)
   enemy.setFixedRotation()

@@ -1,8 +1,11 @@
 import Game from './main'
+import { getFrameShapeData } from './utils'
 
 export default function createPlayer(scene: Game, x: number, y: number) {
-  const player = scene.matter.add.sprite(x, y, 'tiles_spr', 237)
-  player.setFriction(0.05)
+  const player = scene.matter.add.sprite(x, y, 'tiles_spr', 237, {
+    shape: getFrameShapeData(scene, 237),
+  })
+  player.setFriction(0.5)
   player.setFrictionAir(0.0005)
   player.setBounce(0.2)
   player.setFixedRotation()
@@ -13,8 +16,9 @@ export default function createPlayer(scene: Game, x: number, y: number) {
   let canJump = true
   scene.cursors.UP.on('down', () => {
     if (canJump) {
+      // TODO:
       // canJump = false
-      player.setVelocityY(-7)
+      player.setVelocityY(-5)
     }
   })
 

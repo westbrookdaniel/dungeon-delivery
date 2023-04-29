@@ -27,6 +27,7 @@ export default class Game extends Phaser.Scene {
   player!: Phaser.Physics.Matter.Image
   enemies: Phaser.Physics.Matter.Image[] = []
   packs: Phaser.Physics.Matter.Image[] = []
+  tileset!: Phaser.Tilemaps.Tileset
 
   constructor() {
     super('game')
@@ -49,11 +50,11 @@ export default class Game extends Phaser.Scene {
   create() {
     // spritemap
     const map = this.make.tilemap({ key: 'map', tileWidth: 16, tileHeight: 16 })
-    const tileset = map.addTilesetImage('tileset', 'tiles')!
+    this.tileset = map.addTilesetImage('tileset', 'tiles')!
 
-    map.createLayer('bg', tileset)!
+    map.createLayer('bg', this.tileset)!
 
-    const wallLayer = map.createLayer('wall', tileset)!
+    const wallLayer = map.createLayer('wall', this.tileset)!
     wallLayer.setCollisionByProperty({ collides: true })
     this.matter.world.convertTilemapLayer(wallLayer)
 
