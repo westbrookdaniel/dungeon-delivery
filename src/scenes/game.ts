@@ -174,7 +174,7 @@ export default class Game extends Phaser.Scene {
       this.state.subscribe((s) => {
         if (s.orders.find((o) => o.id == order.id)) return
         tw.stop()
-        tw.remove()
+        tw.isActive() && tw.remove()
         timeBarFill.fillColor = 0xaaaaaa
         // add tick if completed otherwise cross
         if (s.completed.find((o) => o.id == order.id)) {
