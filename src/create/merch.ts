@@ -37,7 +37,7 @@ export default function createMerch(
         scene.packs = scene.packs.filter((pack) => pack.active)
 
         scene.state.setScore((s) => s + 10)
-        scene.state.destroyOrder(pack.order.id)
+        scene.state.completeOrder(pack.order.id)
       }
     })
   }

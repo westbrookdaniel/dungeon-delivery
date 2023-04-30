@@ -4,6 +4,8 @@ import { getId } from './utils'
 type Sub = (state: State) => void
 
 export default class State {
+  completed: Order[] = []
+
   subs: Sub[] = []
   // orders
   // list of orders to be fulfilled
@@ -34,6 +36,14 @@ export default class State {
   }
 
   destroyOrder(id: string) {
+    this.orders = this.orders.filter((order) => order.id !== id)
+    this.subs.forEach((fn) => fn(this))
+  }
+
+  completeOrder(id: string) {
+    const order = this.orders.find((order) => order.id === id)
+    if (!order) return
+    this.completed.push(order)
     this.orders = this.orders.filter((order) => order.id !== id)
     this.subs.forEach((fn) => fn(this))
   }

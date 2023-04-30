@@ -162,37 +162,42 @@ export default class Game extends Phaser.Scene {
         ease: 'Linear',
         duration: order.timeLimit * 1000,
         onComplete: () => {
-          console.log('remove order!', order)
+          this.state.destroyOrder(order.id)
         },
       })
       // tw.destroy
+      this.state.subscribe((s) => {
+        if (s.orders.find((o) => o.id == order.id)) return
+        tw.stop()
+        tw.remove()
+        timeBarFill.fillColor = 0xaaaaaa
+        // add tick if completed otherwise cross
+        if (s.completed.find((o) => o.id == order.id)) {
+          const tick = this.add.text(0, 0, '✓', {
+            fontSize: '8px',
+            color: '#00ff00',
+            fontFamily: 'PressStart2P',
+            resolution: 10,
+          })
+          tick.setOrigin(0, 0)
+          tick.setPosition(2, 24)
+          tick.setScrollFactor(0)
+          container.add(tick)
+        } else {
+          const cross = this.add.text(0, 0, '✕', {
+            fontSize: '8px',
+            color: '#ff0000',
+            fontFamily: 'PressStart2P',
+            resolution: 10,
+          })
+          cross.setOrigin(0, 0)
+          cross.setPosition(2, 24)
+          cross.setScrollFactor(0)
+          container.add(cross)
+        }
+      })
 
       container.add([card, text, timeBar, timeBarFill])
-    })
-
-    // time
-    const timeText = this.add.text(0, 0, 'Time: 0', {
-      fontSize: '8px',
-      color: '#FFF',
-      fontFamily: 'PressStart2P',
-      align: 'right',
-      resolution: 10,
-    })
-    timeText.setOrigin(0, 0)
-    timeText.setPosition(WIDTH - 90, 10)
-    timeText.setScrollFactor(0)
-
-    this.tweens.addCounter({
-      from: 60 * 60 * 60,
-      to: 0,
-      duration: 60 * 60 * 60,
-      onUpdate: (tween) => {
-        const value = Math.floor(tween.getValue() / 1000)
-        timeText.setText(`Time: ${value}`)
-      },
-      onComplete: () => {
-        console.log('game end!')
-      },
     })
 
     // score
@@ -203,8 +208,8 @@ export default class Game extends Phaser.Scene {
       align: 'right',
       resolution: 10,
     })
-    scoreText.setOrigin(0, 0)
-    scoreText.setPosition(WIDTH - 90, 22)
+    scoreText.setOrigin(1, 1)
+    scoreText.setPosition(WIDTH - 12, 18)
     scoreText.setScrollFactor(0)
     this.state.subscribe((state) => {
       scoreText.setText(`$${state.score}`)

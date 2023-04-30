@@ -27,11 +27,8 @@ export default function createBench(scene: Game, x: number, y: number) {
       text.setPosition(x - 3, y - 16)
 
       scene.state.subscribe((s) => {
-        const myorder = s.orders.find((o) => o.id === order.id)
-        console.log(myorder)
-        if (!myorder) {
-          text.destroy()
-        }
+        if (s.orders.find((o) => o.id == order.id)) return
+        text.destroy()
       })
 
       scene.packs.push(createPack(scene, x, y, order))
