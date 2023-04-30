@@ -15,17 +15,19 @@ export class Boot extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('package', 'assets/package.png')
-    this.load.image('player', 'assets/player.png')
-    this.load.image('bench', 'assets/bench.png')
-    this.load.image('floor', 'assets/floor.png')
-
     this.load.image('tiles', 'assets/ALL_THE_THINGS.png')
     this.load.tilemapTiledJSON('map', 'assets/tileset.json')
     this.load.spritesheet('tiles_spr', 'assets/ALL_THE_THINGS.png', {
       frameWidth: 16,
       frameHeight: 16,
     })
+
+    this.load.audio('music', 'assets/sounds/music.mp3')
+    this.load.audio('deliver', 'assets/sounds/deliverPack.mp3')
+    this.load.audio('destroy', 'assets/sounds/destroyPack.mp3')
+    this.load.audio('click', 'assets/sounds/click.mp3')
+    this.load.audio('kick', 'assets/sounds/kick.mp3')
+    this.load.audio('jump', 'assets/sounds/jump.mp3')
   }
 
   create() {

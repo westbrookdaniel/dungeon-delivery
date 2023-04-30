@@ -34,7 +34,6 @@ const font = new FontFace(
 )
 font.load().then(() => {
   document.fonts.add(font)
-
   new Phaser.Game({
     type: Phaser.AUTO,
     scale: {

@@ -7,6 +7,13 @@ export class Menu extends Phaser.Scene {
   }
 
   create() {
+    const sounds = {
+      click: this.sound.add('click', { loop: false }),
+      menu: this.sound.add('music', { loop: true }),
+    }
+
+    sounds.menu.play()
+
     const title = this.add.text(0, 0, 'Dungeon Delivery', {
       align: 'center',
       fontSize: '8px',
@@ -50,12 +57,14 @@ export class Menu extends Phaser.Scene {
     play.on('pointerover', () => {
       play.setColor('#fff')
       play.setBackgroundColor('#a3665b')
+      sounds.click.play()
     })
     play.on('pointerout', () => {
       play.setColor('#615553')
       play.setBackgroundColor('#222')
     })
     play.on('pointerdown', () => {
+      sounds.menu.stop()
       this.scene.start('game')
     })
   }

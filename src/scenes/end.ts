@@ -7,6 +7,10 @@ export class End extends Phaser.Scene {
   }
 
   create() {
+    const sounds = {
+      click: this.sound.add('click', { loop: false }),
+    }
+
     // get score from state
     const data = this.scene.settings.data as {
       score: number
@@ -66,6 +70,7 @@ you earned $${score}!
     restart.on('pointerover', () => {
       restart.setColor('#fff')
       restart.setBackgroundColor('#a3665b')
+      sounds.click.play()
     })
     restart.on('pointerout', () => {
       restart.setColor('#615553')

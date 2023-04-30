@@ -22,11 +22,27 @@ export default class Game extends Phaser.Scene {
 
   visibleOrders: Phaser.GameObjects.Container[] = []
 
+  sounds!: {
+    click: Phaser.Sound.BaseSound
+    deliver: Phaser.Sound.BaseSound
+    destroy: Phaser.Sound.BaseSound
+    jump: Phaser.Sound.BaseSound
+    kick: Phaser.Sound.BaseSound
+  }
+
   constructor() {
     super('game')
   }
 
   create() {
+    this.sounds = {
+      click: this.sound.add('click', { loop: false }),
+      deliver: this.sound.add('deliver', { loop: false }),
+      destroy: this.sound.add('destroy', { loop: false }),
+      jump: this.sound.add('jump', { loop: false, volume: 0.2 }),
+      kick: this.sound.add('kick', { loop: false }),
+    }
+
     // Reset/Setup state
     this.enemies = []
     this.merchs = []
@@ -156,6 +172,7 @@ export default class Game extends Phaser.Scene {
     exit.on('pointerover', () => {
       exit.setColor('#fff')
       exit.setBackgroundColor('#a3665b')
+      this.sounds.click.play()
     })
     exit.on('pointerout', () => {
       exit.setColor('#fff')

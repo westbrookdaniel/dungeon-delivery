@@ -54,11 +54,13 @@ export default class State {
   }
 
   destroyOrder(id: string) {
+    this.scene.sounds.destroy.play()
     this.orders = this.orders.filter((order) => order.id !== id)
     this.runSubs()
   }
 
   completeOrder(id: string) {
+    this.scene.sounds.deliver.play()
     const order = this.orders.find((order) => order.id === id)
     if (!order) return
     this.completed.push(order)

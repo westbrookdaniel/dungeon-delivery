@@ -21,6 +21,7 @@ export default function createPlayer(scene: Game, x: number, y: number) {
   scene.cursors.UP.on('down', () => {
     if (canJump) {
       canJump = false
+      scene.sounds.jump.play()
       player.setVelocityY(-5)
     }
   })
@@ -73,6 +74,7 @@ export default function createPlayer(scene: Game, x: number, y: number) {
         { distance: Infinity, pack: null as Phaser.Physics.Matter.Image | null }
       )
       if (nearestPack?.pack && nearestPack.distance < 24) {
+        // Honestly suprised this is working but i'll leave it
         if (holding) {
           // drop
           holding = false
@@ -86,7 +88,6 @@ export default function createPlayer(scene: Game, x: number, y: number) {
           nearestPack.pack.setVelocityY(-4)
           nearestPack.pack.setVelocityX(player.body!.velocity.x * 2)
         } else if (nearestPack) {
-          // pick up
           holding = true
           nearestPack.pack.setIgnoreGravity(true)
           nearestPack.pack.setRotation(0)
