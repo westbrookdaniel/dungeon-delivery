@@ -1,8 +1,8 @@
 import Game from './scenes/game'
 
 // double size so ui is easier to read
-export const WIDTH = 250 * 2
-export const HEIGHT = 200 * 2
+export const WIDTH = 250 // * 2
+export const HEIGHT = 200 // * 2
 
 const { KeyCodes } = Phaser.Input.Keyboard
 

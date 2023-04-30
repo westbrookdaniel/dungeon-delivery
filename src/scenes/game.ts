@@ -69,7 +69,7 @@ export default class Game extends Phaser.Scene {
       WIDTH / 2 - 20,
       HEIGHT / 2 - 20
     )
-    this.cameras.main.setZoom(2)
+    // this.cameras.main.setZoom(2)
 
     const benchs: Bench[] = []
 
@@ -122,12 +122,11 @@ export default class Game extends Phaser.Scene {
      * Add boot/menu/end scenes
      */
 
-    // TODO: Move this to a separate scene
+    // TODO: Move this to a separate scene and add back camera zoom
     // display orders in ui
     orders.forEach((order, i) => {
       // container
       const container = this.add.container(0, 0)
-      this.cameras.main.ignore(container)
       container.setPosition(10 + i * 32, 10)
 
       // card
@@ -166,12 +165,52 @@ export default class Game extends Phaser.Scene {
         ease: 'Linear',
         duration: order.timeLimit * 1000,
         onComplete: () => {
-          console.log('done!', order)
+          console.log('remove order!', order)
         },
       })
 
       container.add([card, text, timeBar, timeBarFill])
     })
+
+    // time in top right
+    // score below time
+    const timeText = this.add.text(0, 0, 'Time: 0', {
+      fontSize: '8px',
+      color: '#FFF',
+      fontFamily: 'PressStart2P',
+      align: 'right',
+      resolution: 10,
+    })
+    timeText.setOrigin(0, 0)
+    timeText.setPosition(WIDTH - 90, 10)
+    timeText.setScrollFactor(0)
+
+    // time count down twean
+    this.tweens.addCounter({
+      from: 60 * 60 * 60,
+      to: 0,
+      duration: 60 * 60 * 60,
+      onUpdate: (tween) => {
+        const value = Math.floor(tween.getValue() / 1000)
+        timeText.setText(`Time: ${value}`)
+      },
+      onComplete: () => {
+        console.log('game end!')
+      },
+    })
+
+    // time in top right
+    // score below time
+    const scoreText = this.add.text(0, 0, '$0', {
+      fontSize: '8px',
+      color: '#FFF',
+      fontFamily: 'PressStart2P',
+      align: 'right',
+      resolution: 10,
+    })
+    scoreText.setOrigin(0, 0)
+    scoreText.setPosition(WIDTH - 90, 22)
+    scoreText.setScrollFactor(0)
   }
 
   update() {
