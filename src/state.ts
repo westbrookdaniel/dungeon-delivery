@@ -18,9 +18,9 @@ export default class State {
   // value can be 1, 2, or 3
   // time limit in s
   orders: Order[] = [
-    { id: getId(), location: 'A', value: 1, timeLimit: 20 },
-    { id: getId(), location: 'B', value: 2, timeLimit: 30 },
-    { id: getId(), location: 'A', value: 2, timeLimit: 40 },
+    { id: getId(), location: 'A', value: 1, timeLimit: 30 },
+    { id: getId(), location: 'B', value: 2, timeLimit: 40 },
+    { id: getId(), location: 'A', value: 2, timeLimit: 60 },
   ]
   // score
   score = 0
