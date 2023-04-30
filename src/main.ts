@@ -24,20 +24,29 @@ export const getKeyBindings = (scene: Phaser.Scene): KeyBindings => {
   return scene.input.keyboard!.addKeys(KEY_BINDINGS) as KeyBindings
 }
 
-new Phaser.Game({
-  type: Phaser.AUTO,
-  width: WIDTH,
-  height: HEIGHT,
-  scene: Game,
-  backgroundColor: '#000',
-  pixelArt: true,
-  physics: {
-    default: 'matter',
-    matter: {
-      // debug: true,
+// wait for font to have loaded before starting game
+const font = new FontFace(
+  'PressStart2P',
+  "local('PressStart2P'), url('./PressStart2P-Regular.ttf')"
+)
+font.load().then(() => {
+  document.fonts.add(font)
+
+  new Phaser.Game({
+    type: Phaser.AUTO,
+    width: WIDTH,
+    height: HEIGHT,
+    scene: Game,
+    backgroundColor: '#000',
+    pixelArt: true,
+    physics: {
+      default: 'matter',
+      matter: {
+        // debug: true,
+      },
     },
-  },
-  input: {
-    keyboard: true,
-  },
+    input: {
+      keyboard: true,
+    },
+  })
 })
