@@ -265,6 +265,11 @@ function createVisibleOrders(scene: Game) {
       duration: order.timeLimit * 1000,
       onComplete: () => {
         scene.state.destroyOrder(order.id)
+        const pack = scene.packs.find((pack) => pack.order.id == order.id)
+        if (!pack) return
+        pack.destroy()
+        // cleanup destroyed packages
+        scene.packs = scene.packs.filter((pack) => pack.active)
       },
     })
     // tw.destroy

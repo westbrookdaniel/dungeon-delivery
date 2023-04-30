@@ -25,6 +25,13 @@ export default function createPlayer(scene: Game, x: number, y: number) {
       player.setVelocityY(-5)
     }
   })
+  scene.cursors.SPACE.on('down', () => {
+    if (canJump) {
+      canJump = false
+      scene.sounds.jump.play()
+      player.setVelocityY(-5)
+    }
+  })
 
   // when touching something, can jump
   player.setOnCollide((data: any) => {

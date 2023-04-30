@@ -16,6 +16,7 @@ export const KEY_BINDINGS = {
   RIGHT: KeyCodes.D,
   UP: KeyCodes.W,
   DOWN: KeyCodes.S,
+  SPACE: KeyCodes.SPACE,
 }
 
 export type KeyBindings = Record<

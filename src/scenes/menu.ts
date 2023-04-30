@@ -83,6 +83,6 @@ get destroyed!
 
 
 wasd to move
-k to grab package
+hold k to hold package
 
 `
