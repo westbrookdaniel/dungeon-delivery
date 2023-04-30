@@ -13,6 +13,7 @@ export class End extends Phaser.Scene {
       time: number
     }
     const score = data.score ?? 0
+    // dont actually do anything with this
     const time = data.time ?? 0
 
     const title = this.add.text(0, 0, 'Game Over', {
@@ -30,10 +31,7 @@ export class End extends Phaser.Scene {
       0,
       0,
       `
-you earned $${score} in ${time}s!
-
-
-score: ${score * time}
+you earned $${score}!
 `,
       {
         align: 'center',

@@ -4,6 +4,13 @@ import { getId } from './utils'
 
 type Sub = (state: State) => void
 
+const randomOrder = (): Order => {
+  const location = Math.random() > 0.5 ? 'A' : 'B'
+  const value = Math.floor(Math.random() * 3) + 1
+  const timeLimit = Math.floor(Math.random() * 30) + 30
+  return { id: getId(), location, value, timeLimit }
+}
+
 export default class State {
   completed: Order[] = []
 
@@ -18,6 +25,7 @@ export default class State {
   // value can be 1, 2, or 3
   // time limit in s
   orders: Order[] = [
+    // Starting orders always the same
     { id: getId(), location: 'A', value: 1, timeLimit: 30 },
     { id: getId(), location: 'B', value: 2, timeLimit: 40 },
     { id: getId(), location: 'A', value: 2, timeLimit: 60 },
@@ -25,7 +33,7 @@ export default class State {
   // score
   score = 0
 
-  constructor(public scene: Game) {}
+  constructor(public scene: Game, public orderReset: () => void) {}
 
   subscribe(fn: Sub) {
     this.subs.push(fn)
@@ -35,13 +43,8 @@ export default class State {
     this.subs.forEach((fn) => fn(this))
 
     if (this.orders.length === 0) {
-      const time = Math.round(
-        (this.scene.time.now - this.scene.time.startTime) / 1000
-      )
-      // dont go to end scene immediately
-      setTimeout(() => {
-        this.scene.scene.start('end', { score: this.score, time: time })
-      }, 1000)
+      this.orders = [randomOrder(), randomOrder(), randomOrder()]
+      this.orderReset()
     }
   }
 

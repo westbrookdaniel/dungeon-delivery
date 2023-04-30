@@ -15,7 +15,12 @@ export default class Game extends Phaser.Scene {
   packs: Pack[] = []
   tileset!: Phaser.Tilemaps.Tileset
 
+  benchs: Bench[] = []
+
   state!: State
+  map!: Phaser.Tilemaps.Tilemap
+
+  visibleOrders: Phaser.GameObjects.Container[] = []
 
   constructor() {
     super('game')
@@ -23,22 +28,28 @@ export default class Game extends Phaser.Scene {
 
   create() {
     // Reset/Setup state
-    this.state = new State(this)
     this.enemies = []
     this.merchs = []
     this.packs = []
+    this.visibleOrders = []
+    this.benchs = []
+    this.state = new State(this, () => {
+      this.visibleOrders.forEach((order) => order.destroy())
+      this.visibleOrders = []
+      this.visibleOrders = createVisibleOrders(this)
+    })
 
     // spritemap
-    const map = this.make.tilemap({
+    this.map = this.make.tilemap({
       key: 'map',
       tileWidth: 16,
       tileHeight: 16,
     })
-    this.tileset = map.addTilesetImage('tileset', 'tiles')!
+    this.tileset = this.map.addTilesetImage('tileset', 'tiles')!
 
-    map.createLayer('bg', this.tileset)!
+    this.map.createLayer('bg', this.tileset)!
 
-    const wallLayer = map.createLayer('wall', this.tileset)!
+    const wallLayer = this.map.createLayer('wall', this.tileset)!
     wallLayer.setCollisionByProperty({ collides: true })
     this.matter.world.convertTilemapLayer(wallLayer)
 
@@ -67,10 +78,8 @@ export default class Game extends Phaser.Scene {
     )
     // this.cameras.main.setZoom(2)
 
-    const benchs: Bench[] = []
-
     // object spritemap layers
-    map.objects.forEach((layer) => {
+    this.map.objects.forEach((layer) => {
       switch (layer.name) {
         case 'enemy':
           layer.objects.forEach((obj) => {
@@ -91,17 +100,10 @@ export default class Game extends Phaser.Scene {
           break
         case 'pack':
           layer.objects.forEach((obj) => {
-            benchs.push(createBench(this, obj.x!, obj.y!))
+            this.benchs.push(createBench(this, obj.x!, obj.y!))
           })
           break
       }
-    })
-
-    // packages sitting on benches for orders
-    this.state.orders.forEach((order) => {
-      const emptyBench = benchs.find((bench) => !bench.order)
-      if (!emptyBench) return
-      emptyBench.addOrder(order)
     })
 
     /**
@@ -113,89 +115,7 @@ export default class Game extends Phaser.Scene {
 
     // TODO: Move this to a separate scene and add back camera zoom
     // display orders in ui
-    this.state.orders.forEach((order, i) => {
-      // container
-      const container = this.add.container(0, 0)
-      container.setPosition(10 + i * 32, 10)
-
-      // card
-      const card = this.add.rectangle(0, 0, 28, 24, 0xffffff)
-      card.setOrigin(0, 0)
-      card.setPosition(0, 0)
-      card.setScrollFactor(0)
-
-      // text
-      const text = this.add.text(
-        0,
-        0,
-        `${order.location}\n$${order.value * 10}`,
-        {
-          fontSize: '8px',
-          color: '#000',
-          fontFamily: 'PressStart2P',
-          resolution: 10,
-        }
-      )
-      text.setOrigin(0, 0)
-      text.setPosition(2, 2)
-      text.setScrollFactor(0)
-
-      // time bar
-      const timeBar = this.add.rectangle(0, 0, 28, 4, 0x000000)
-      timeBar.setOrigin(0, 0)
-      timeBar.setPosition(0, 24)
-      timeBar.setScrollFactor(0)
-
-      // time bar fill
-      const timeBarFill = this.add.rectangle(0, 0, 28, 4, 0x00ff00)
-      timeBarFill.setOrigin(0, 0)
-      timeBarFill.setPosition(0, 24)
-      timeBarFill.setScrollFactor(0)
-
-      // time bar fill tween
-      const tw = this.tweens.add({
-        targets: timeBarFill,
-        scaleX: 0,
-        ease: 'Linear',
-        duration: order.timeLimit * 1000,
-        onComplete: () => {
-          this.state.destroyOrder(order.id)
-        },
-      })
-      // tw.destroy
-      this.state.subscribe((s) => {
-        if (s.orders.find((o) => o.id == order.id)) return
-        tw.stop()
-        tw.isActive() && tw.remove()
-        timeBarFill.fillColor = 0xaaaaaa
-        // add tick if completed otherwise cross
-        if (s.completed.find((o) => o.id == order.id)) {
-          const tick = this.add.text(0, 0, '✓', {
-            fontSize: '8px',
-            color: '#00ff00',
-            fontFamily: 'PressStart2P',
-            resolution: 10,
-          })
-          tick.setOrigin(0, 0)
-          tick.setPosition(2, 24)
-          tick.setScrollFactor(0)
-          container.add(tick)
-        } else {
-          const cross = this.add.text(0, 0, '✕', {
-            fontSize: '8px',
-            color: '#ff0000',
-            fontFamily: 'PressStart2P',
-            resolution: 10,
-          })
-          cross.setOrigin(0, 0)
-          cross.setPosition(2, 24)
-          cross.setScrollFactor(0)
-          container.add(cross)
-        }
-      })
-
-      container.add([card, text, timeBar, timeBarFill])
-    })
+    this.visibleOrders = createVisibleOrders(this)
 
     // score
     const scoreText = this.add.text(0, 0, '$0', {
@@ -241,6 +161,30 @@ export default class Game extends Phaser.Scene {
       exit.setColor('#fff')
       exit.setBackgroundColor('#00000000')
     })
+
+    // add timer tweaned from 120 to 0
+    const timerText = this.add.text(0, 0, '120', {
+      fontSize: '8px',
+      color: '#FFF',
+      fontFamily: 'PressStart2P',
+      align: 'right',
+      resolution: 10,
+    })
+    timerText.setOrigin(1, 1)
+    timerText.setPosition(WIDTH - 12, HEIGHT - 10)
+    timerText.setScrollFactor(0)
+    const timer = this.tweens.addCounter({
+      from: 120,
+      to: 0,
+      duration: 120000,
+      onUpdate: () => {
+        timerText.setText(Math.round(timer.getValue()).toString())
+      },
+      onComplete: () => {
+        const time = Math.round((this.time.now - this.time.startTime) / 1000)
+        this.scene.start('end', { score: this.state.score, time })
+      },
+    })
   }
 
   update() {
@@ -248,4 +192,98 @@ export default class Game extends Phaser.Scene {
     this.enemies.forEach((e) => e.update())
     this.merchs.forEach((e) => e.update())
   }
+}
+
+function createVisibleOrders(scene: Game) {
+  scene.state.orders.forEach((order) => {
+    const emptyBench = scene.benchs.find((bench) => !bench.order)
+    if (!emptyBench) return
+    emptyBench.addOrder(order)
+  })
+
+  return scene.state.orders.map((order, i) => {
+    // container
+    const container = scene.add.container(0, 0)
+    container.setPosition(10 + i * 32, 10)
+
+    // card
+    const card = scene.add.rectangle(0, 0, 28, 24, 0xffffff)
+    card.setOrigin(0, 0)
+    card.setPosition(0, 0)
+    card.setScrollFactor(0)
+
+    // text
+    const text = scene.add.text(
+      0,
+      0,
+      `${order.location}\n$${order.value * 10}`,
+      {
+        fontSize: '8px',
+        color: '#000',
+        fontFamily: 'PressStart2P',
+        resolution: 10,
+      }
+    )
+    text.setOrigin(0, 0)
+    text.setPosition(2, 2)
+    text.setScrollFactor(0)
+
+    // time bar
+    const timeBar = scene.add.rectangle(0, 0, 28, 4, 0x000000)
+    timeBar.setOrigin(0, 0)
+    timeBar.setPosition(0, 24)
+    timeBar.setScrollFactor(0)
+
+    // time bar fill
+    const timeBarFill = scene.add.rectangle(0, 0, 28, 4, 0x00ff00)
+    timeBarFill.setOrigin(0, 0)
+    timeBarFill.setPosition(0, 24)
+    timeBarFill.setScrollFactor(0)
+
+    // time bar fill tween
+    const tw = scene.tweens.add({
+      targets: timeBarFill,
+      scaleX: 0,
+      ease: 'Linear',
+      duration: order.timeLimit * 1000,
+      onComplete: () => {
+        scene.state.destroyOrder(order.id)
+      },
+    })
+    // tw.destroy
+    scene.state.subscribe((s) => {
+      if (s.orders.find((o) => o.id == order.id)) return
+      tw.stop()
+      tw.isActive() && tw.remove()
+      timeBarFill.fillColor = 0xaaaaaa
+      // add tick if completed otherwise cross
+      if (s.completed.find((o) => o.id == order.id)) {
+        const tick = scene.add.text(0, 0, '✓', {
+          fontSize: '8px',
+          color: '#00ff00',
+          fontFamily: 'PressStart2P',
+          resolution: 10,
+        })
+        tick.setOrigin(0, 0)
+        tick.setPosition(2, 24)
+        tick.setScrollFactor(0)
+        container.add(tick)
+      } else {
+        const cross = scene.add.text(0, 0, '✕', {
+          fontSize: '8px',
+          color: '#ff0000',
+          fontFamily: 'PressStart2P',
+          resolution: 10,
+        })
+        cross.setOrigin(0, 0)
+        cross.setPosition(2, 24)
+        cross.setScrollFactor(0)
+        container.add(cross)
+      }
+    })
+
+    container.add([card, text, timeBar, timeBarFill])
+
+    return container
+  })
 }
