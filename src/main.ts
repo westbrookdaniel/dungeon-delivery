@@ -1,3 +1,4 @@
+import { Boot } from './scenes/boot'
 import Game from './scenes/game'
 
 // double size so ui is easier to read
@@ -36,7 +37,7 @@ font.load().then(() => {
     type: Phaser.AUTO,
     width: WIDTH,
     height: HEIGHT,
-    scene: Game,
+    scene: [Boot, Game],
     backgroundColor: '#000',
     pixelArt: true,
     physics: {
