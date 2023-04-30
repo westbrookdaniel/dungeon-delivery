@@ -1,6 +1,6 @@
-import Game from './main'
-import { Order } from './types'
-import { getFrameShapeData } from './utils'
+import Game from '../scenes/game'
+import { Order } from '../types'
+import { getFrameShapeData } from '../utils'
 
 export default function createPack(
   scene: Game,

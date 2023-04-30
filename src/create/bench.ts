@@ -1,6 +1,6 @@
-import Game from './main'
+import Game from '../scenes/game'
 import createPack from './pack'
-import { Order } from './types'
+import { Order } from '../types'
 
 export type Bench = {
   order: Order | null

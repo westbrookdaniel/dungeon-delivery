@@ -1,5 +1,5 @@
-import Game from './main'
-import { getFrameShapeData } from './utils'
+import Game from '../scenes/game'
+import { getFrameShapeData } from '../utils'
 
 export default function createPlayer(scene: Game, x: number, y: number) {
   const player = scene.matter.add.sprite(x, y, 'tiles_spr', 237, {

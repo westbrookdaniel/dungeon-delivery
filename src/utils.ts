@@ -1,4 +1,4 @@
-import Game from './main'
+import Game from './scenes/game'
 
 export const getFrameShapeData = (scene: Game, frame: number) => {
   const data = (scene.tileset.tileData as any)[frame].objectgroup.objects[0]
@@ -11,3 +11,5 @@ export const getFrameShapeData = (scene: Game, frame: number) => {
     y: data.y,
   }
 }
+
+export const getId = () => Math.random().toString(36).substr(2, 9)
