@@ -47,7 +47,7 @@ score: ${score * time}
     instructions.setPosition(WIDTH / 2, 100)
 
     // add play button
-    const restart = this.add.text(0, 0, 'Restart', {
+    const restart = this.add.text(0, 0, 'Menu', {
       align: 'center',
       fontSize: '8px',
       color: '#615553',
@@ -74,7 +74,7 @@ score: ${score * time}
       restart.setBackgroundColor('#222')
     })
     restart.on('pointerdown', () => {
-      this.scene.start('game')
+      this.scene.start('menu')
     })
   }
 }

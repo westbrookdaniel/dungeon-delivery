@@ -38,7 +38,10 @@ export default class State {
       const time = Math.round(
         (this.scene.time.now - this.scene.time.startTime) / 1000
       )
-      this.scene.scene.start('end', { score: this.score, time: time })
+      // dont go to end scene immediately
+      setTimeout(() => {
+        this.scene.scene.start('end', { score: this.score, time: time })
+      }, 1000)
     }
   }
 

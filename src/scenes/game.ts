@@ -211,6 +211,36 @@ export default class Game extends Phaser.Scene {
     this.state.subscribe((state) => {
       scoreText.setText(`$${state.score}`)
     })
+
+    // button in bottom left to exit to menu
+    const exit = this.add.text(0, 0, '✕', {
+      fontSize: '8px',
+      color: '#fff',
+      fontFamily: 'PressStart2P',
+      align: 'right',
+      resolution: 10,
+      padding: {
+        left: 3,
+        right: 2,
+        top: 1,
+        bottom: 3,
+      },
+    })
+    exit.setOrigin(0, 1)
+    exit.setPosition(10, HEIGHT - 10)
+    exit.setScrollFactor(0)
+    exit.setInteractive({ useHandCursor: true })
+    exit.on('pointerdown', () => {
+      this.scene.start('menu')
+    })
+    exit.on('pointerover', () => {
+      exit.setColor('#fff')
+      exit.setBackgroundColor('#a3665b')
+    })
+    exit.on('pointerout', () => {
+      exit.setColor('#fff')
+      exit.setBackgroundColor('#00000000')
+    })
   }
 
   update() {
