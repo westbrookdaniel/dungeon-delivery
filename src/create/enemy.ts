@@ -49,7 +49,7 @@ export default function createEnemy(scene: Game, x: number, y: number) {
     // if enemy touches package it will be destroyed
     scene.packs.forEach((pack) => {
       const isTouchingPack =
-        Phaser.Math.Distance.Between(enemy.x, enemy.y, pack.x, pack.y) < 24
+        Phaser.Math.Distance.Between(enemy.x, enemy.y, pack.x, pack.y) < 16
       if (isTouchingPack) {
         scene.matter.world.remove(pack)
         pack.destroy()

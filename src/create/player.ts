@@ -25,10 +25,10 @@ export default function createPlayer(scene: Game, x: number, y: number) {
   player.update = () => {
     // player movement
     if (scene.cursors.RIGHT.isDown) {
-      player.setVelocityX(3)
+      player.setVelocityX(2)
     }
     if (scene.cursors.LEFT.isDown) {
-      player.setVelocityX(-3)
+      player.setVelocityX(-2)
     }
 
     // player picking up packages
@@ -46,19 +46,23 @@ export default function createPlayer(scene: Game, x: number, y: number) {
           }
           return nearest
         },
-        { distance: Infinity, pack: null as any }
+        { distance: Infinity, pack: null as Phaser.Physics.Matter.Image | null }
       )
-      if (nearestPack && nearestPack.distance < 24) {
+      if (nearestPack?.pack && nearestPack.distance < 24) {
         if (holding) {
           // drop
           holding = false
           nearestPack.pack.setIgnoreGravity(false)
-          nearestPack.pack.setPosition(player.x, player.y - 16)
+          nearestPack.pack.setPosition(player.x + 14, player.y)
+          nearestPack.pack.setRotation(0)
+          nearestPack.pack.setVelocityY(-4)
+          nearestPack.pack.setVelocityX(player.body!.velocity.x * 2)
         } else if (nearestPack) {
           // pick up
           holding = true
           nearestPack.pack.setIgnoreGravity(true)
-          nearestPack.pack.setPosition(player.x, player.y - 16)
+          nearestPack.pack.setRotation(0)
+          nearestPack.pack.setPosition(player.x + 14, player.y)
         }
       }
     }
