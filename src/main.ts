@@ -37,6 +37,9 @@ font.load().then(() => {
 
   new Phaser.Game({
     type: Phaser.AUTO,
+    scale: {
+      mode: Phaser.Scale.FIT,
+    },
     width: WIDTH,
     height: HEIGHT,
     scene: [Boot, Menu, Game, End],
