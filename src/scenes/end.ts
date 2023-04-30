@@ -14,7 +14,7 @@ export class End extends Phaser.Scene {
     }
     const score = data.score ?? 0
     // dont actually do anything with this
-    const time = data.time ?? 0
+    // const time = data.time ?? 0
 
     const title = this.add.text(0, 0, 'Game Over', {
       align: 'center',
