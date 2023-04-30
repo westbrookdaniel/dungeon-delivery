@@ -55,6 +55,7 @@ export default function createEnemy(scene: Game, x: number, y: number) {
         pack.destroy()
         // cleanup destroyed packages
         scene.packs = scene.packs.filter((pack) => pack.active)
+        scene.state.destroyOrder(pack.order.id)
       }
     })
   }
