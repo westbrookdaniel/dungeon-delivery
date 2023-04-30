@@ -1,4 +1,5 @@
 import { Boot } from './scenes/boot'
+import { End } from './scenes/end'
 import Game from './scenes/game'
 import { Menu } from './scenes/menu'
 
@@ -38,7 +39,7 @@ font.load().then(() => {
     type: Phaser.AUTO,
     width: WIDTH,
     height: HEIGHT,
-    scene: [Boot, Menu, Game],
+    scene: [Boot, Menu, Game, End],
     backgroundColor: '#000',
     pixelArt: true,
     physics: {

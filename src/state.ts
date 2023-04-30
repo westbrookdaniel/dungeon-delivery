@@ -1,3 +1,4 @@
+import Game from './scenes/game'
 import { Order } from './types'
 import { getId } from './utils'
 
@@ -24,20 +25,31 @@ export default class State {
   // score
   score = 0
 
-  constructor() {}
+  constructor(public scene: Game) {}
 
   subscribe(fn: Sub) {
     this.subs.push(fn)
   }
 
+  runSubs() {
+    this.subs.forEach((fn) => fn(this))
+
+    if (this.orders.length === 0) {
+      const time = Math.round(
+        (this.scene.time.now - this.scene.time.startTime) / 1000
+      )
+      this.scene.scene.start('end', { score: this.score, time: time })
+    }
+  }
+
   setScore(fn: (score: number) => number) {
     this.score = fn(this.score)
-    this.subs.forEach((fn) => fn(this))
+    this.runSubs()
   }
 
   destroyOrder(id: string) {
     this.orders = this.orders.filter((order) => order.id !== id)
-    this.subs.forEach((fn) => fn(this))
+    this.runSubs()
   }
 
   completeOrder(id: string) {
@@ -45,6 +57,6 @@ export default class State {
     if (!order) return
     this.completed.push(order)
     this.orders = this.orders.filter((order) => order.id !== id)
-    this.subs.forEach((fn) => fn(this))
+    this.runSubs()
   }
 }

@@ -15,13 +15,19 @@ export default class Game extends Phaser.Scene {
   packs: Pack[] = []
   tileset!: Phaser.Tilemaps.Tileset
 
-  state = new State()
+  state!: State
 
   constructor() {
     super('game')
   }
 
   create() {
+    // Reset/Setup state
+    this.state = new State(this)
+    this.enemies = []
+    this.merchs = []
+    this.packs = []
+
     // spritemap
     const map = this.make.tilemap({
       key: 'map',
