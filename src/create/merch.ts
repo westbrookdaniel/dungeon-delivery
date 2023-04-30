@@ -18,13 +18,12 @@ export default function createMerch(
   // text above saying which merch type he is
   const text = scene.add.text(0, 0, `Merch ${merchType}`, {
     fontSize: '8px',
-    color: '#FFF',
+    color: '#615553',
     fontFamily: 'PressStart2P',
     resolution: 10,
   })
   text.setOrigin(0, 0)
-  text.setPosition(merch.x, merch.y - 16)
-  text.setScrollFactor(0)
+  text.setPosition(merch.x - 25, merch.y - 16)
 
   merch.update = () => {
     // if touches package add score
@@ -38,6 +37,7 @@ export default function createMerch(
         scene.packs = scene.packs.filter((pack) => pack.active)
 
         scene.state.setScore((s) => s + 10)
+        scene.state.destroyOrder(pack.order.id)
       }
     })
   }

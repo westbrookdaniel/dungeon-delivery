@@ -2,6 +2,9 @@ import Game from '../scenes/game'
 import { Order } from '../types'
 import { getFrameShapeData } from '../utils'
 
+// helps stop glitch through floor
+const MAX_VEL = 3
+
 export interface Pack extends Phaser.Physics.Matter.Image {
   order: Order
 }
@@ -20,6 +23,12 @@ export default function createPack(
   pack.setBounce(0.9)
 
   pack.order = order
+
+  pack.update = () => {
+    if (pack.body!.velocity.y > MAX_VEL) {
+      pack.setVelocityY(MAX_VEL)
+    }
+  }
 
   return pack as Pack
 }

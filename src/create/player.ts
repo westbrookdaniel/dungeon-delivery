@@ -1,6 +1,9 @@
 import Game from '../scenes/game'
 import { getFrameShapeData } from '../utils'
 
+// helps stop glitch through floor
+const MAX_VEL = 3
+
 export default function createPlayer(scene: Game, x: number, y: number) {
   const player = scene.matter.add.sprite(x, y, 'tiles_spr', 237, {
     shape: getFrameShapeData(scene, 237),
@@ -11,6 +14,7 @@ export default function createPlayer(scene: Game, x: number, y: number) {
   player.setFixedRotation()
 
   let holding = false
+  let facingLeft = false
 
   // player jumping
   let canJump = true
@@ -29,6 +33,19 @@ export default function createPlayer(scene: Game, x: number, y: number) {
     }
     if (scene.cursors.LEFT.isDown) {
       player.setVelocityX(-2)
+    }
+
+    if (player.body!.velocity.y > MAX_VEL) {
+      player.setVelocityY(MAX_VEL)
+    }
+
+    // if moving left, use left facing sprite
+    if (player.body!.velocity.x > -1) {
+      facingLeft = false
+      player.setFrame(237)
+    } else {
+      facingLeft = true
+      player.setFrame(236)
     }
 
     // player picking up packages
@@ -53,7 +70,11 @@ export default function createPlayer(scene: Game, x: number, y: number) {
           // drop
           holding = false
           nearestPack.pack.setIgnoreGravity(false)
-          nearestPack.pack.setPosition(player.x + 14, player.y)
+          if (facingLeft) {
+            nearestPack.pack.setPosition(player.x - 14, player.y)
+          } else {
+            nearestPack.pack.setPosition(player.x + 14, player.y)
+          }
           nearestPack.pack.setRotation(0)
           nearestPack.pack.setVelocityY(-4)
           nearestPack.pack.setVelocityX(player.body!.velocity.x * 2)
@@ -62,7 +83,11 @@ export default function createPlayer(scene: Game, x: number, y: number) {
           holding = true
           nearestPack.pack.setIgnoreGravity(true)
           nearestPack.pack.setRotation(0)
-          nearestPack.pack.setPosition(player.x + 14, player.y)
+          if (facingLeft) {
+            nearestPack.pack.setPosition(player.x - 14, player.y)
+          } else {
+            nearestPack.pack.setPosition(player.x + 14, player.y)
+          }
         }
       }
     }

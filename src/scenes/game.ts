@@ -165,7 +165,6 @@ export default class Game extends Phaser.Scene {
           console.log('remove order!', order)
         },
       })
-
       // tw.destroy
 
       container.add([card, text, timeBar, timeBarFill])
