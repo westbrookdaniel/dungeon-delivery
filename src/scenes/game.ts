@@ -6,6 +6,7 @@ import { HEIGHT, KeyBindings, WIDTH, getKeyBindings } from '../main'
 import State from '../state'
 import createMerch from '../create/merch'
 import { Pack } from '../create/pack'
+import Matter from 'matter-js'
 
 export default class Game extends Phaser.Scene {
   cursors!: KeyBindings

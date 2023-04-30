@@ -20,9 +20,16 @@ export default function createPlayer(scene: Game, x: number, y: number) {
   let canJump = true
   scene.cursors.UP.on('down', () => {
     if (canJump) {
-      // TODO:
-      // canJump = false
+      canJump = false
       player.setVelocityY(-5)
+    }
+  })
+
+  // when touching something, can jump
+  player.setOnCollide((data: any) => {
+    const { bodyA, bodyB } = data
+    if (bodyA === player.body || bodyB === player.body) {
+      canJump = true
     }
   })
 
