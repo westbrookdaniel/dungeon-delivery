@@ -16,14 +16,15 @@ export default function createMerch(
   merch.setFixedRotation()
 
   // text above saying which merch type he is
-  const text = scene.add.text(0, 0, `Merch ${merchType}`, {
+  const text = scene.add.text(0, 0, `Merchant\n${merchType}`, {
     fontSize: '8px',
+    align: 'center',
     color: '#615553',
     fontFamily: 'PressStart2P',
     resolution: 10,
   })
-  text.setOrigin(0, 0)
-  text.setPosition(merch.x - 25, merch.y - 16)
+  text.setOrigin(0.5, 0)
+  text.setPosition(merch.x + 1, merch.y - 24)
 
   merch.update = () => {
     // if touches package add score
@@ -36,7 +37,7 @@ export default function createMerch(
         // cleanup destroyed packages
         scene.packs = scene.packs.filter((pack) => pack.active)
 
-        scene.state.setScore((s) => s + 10)
+        scene.state.setScore((s) => s + 10 * pack.order.value)
         scene.state.completeOrder(pack.order.id)
       }
     })

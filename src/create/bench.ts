@@ -17,14 +17,20 @@ export default function createBench(scene: Game, x: number, y: number) {
       bench.order = order
 
       // text above saying which merch it is for
-      const text = scene.add.text(0, 0, `${order.location}`, {
-        fontSize: '8px',
-        color: '#615553',
-        fontFamily: 'PressStart2P',
-        resolution: 10,
-      })
-      text.setOrigin(0, 0)
-      text.setPosition(x - 3, y - 16)
+      const text = scene.add.text(
+        0,
+        0,
+        `${order.location}\n$${order.value * 10}`,
+        {
+          fontSize: '8px',
+          color: '#615553',
+          align: 'center',
+          fontFamily: 'PressStart2P',
+          resolution: 10,
+        }
+      )
+      text.setOrigin(0.5, 0)
+      text.setPosition(x + 1, y - 20)
 
       scene.state.subscribe((s) => {
         if (s.orders.find((o) => o.id == order.id)) return

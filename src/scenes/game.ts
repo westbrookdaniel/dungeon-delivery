@@ -127,30 +127,35 @@ export default class Game extends Phaser.Scene {
       container.setPosition(10 + i * 32, 10)
 
       // card
-      const card = this.add.rectangle(0, 0, 24, 24, 0xffffff)
+      const card = this.add.rectangle(0, 0, 28, 24, 0xffffff)
       card.setOrigin(0, 0)
       card.setPosition(0, 0)
       card.setScrollFactor(0)
 
       // text
-      const text = this.add.text(0, 0, `${order.location}${order.value}`, {
-        fontSize: '8px',
-        color: '#000',
-        fontFamily: 'PressStart2P',
-        resolution: 10,
-      })
+      const text = this.add.text(
+        0,
+        0,
+        `${order.location}\n$${order.value * 10}`,
+        {
+          fontSize: '8px',
+          color: '#000',
+          fontFamily: 'PressStart2P',
+          resolution: 10,
+        }
+      )
       text.setOrigin(0, 0)
       text.setPosition(2, 2)
       text.setScrollFactor(0)
 
       // time bar
-      const timeBar = this.add.rectangle(0, 0, 24, 4, 0x000000)
+      const timeBar = this.add.rectangle(0, 0, 28, 4, 0x000000)
       timeBar.setOrigin(0, 0)
       timeBar.setPosition(0, 24)
       timeBar.setScrollFactor(0)
 
       // time bar fill
-      const timeBarFill = this.add.rectangle(0, 0, 24, 4, 0x00ff00)
+      const timeBarFill = this.add.rectangle(0, 0, 28, 4, 0x00ff00)
       timeBarFill.setOrigin(0, 0)
       timeBarFill.setPosition(0, 24)
       timeBarFill.setScrollFactor(0)
