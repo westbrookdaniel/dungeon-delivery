@@ -1,4 +1,3 @@
-import Matter from 'matter-js'
 import Game from '../scenes/game'
 import { getFrameShapeData } from '../utils'
 
@@ -47,6 +46,7 @@ export default function createPlayer(scene: Game, x: number, y: number) {
     if (scene.cursors.RIGHT.isDown) {
       // player movement
       player.setVelocityX(2)
+      player.thrustLeft(0.01)
     }
     if (scene.cursors.LEFT.isDown) {
       player.setVelocityX(-2)
