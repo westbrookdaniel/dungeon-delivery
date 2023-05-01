@@ -10,6 +10,7 @@ export default function createEnemy(scene: Game, x: number, y: number) {
   enemy.setFrictionAir(0.0005)
   enemy.setBounce(0.2)
   enemy.setFixedRotation()
+  ;(enemy.body as MatterJS.BodyType).slop = 0
 
   enemy.update = () => {
     // enemy movement

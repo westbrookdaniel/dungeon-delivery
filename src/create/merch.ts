@@ -14,6 +14,7 @@ export default function createMerch(
   merch.setFrictionAir(0.0005)
   merch.setBounce(0.2)
   merch.setFixedRotation()
+  ;(merch.body as MatterJS.BodyType).slop = 0
 
   // text above saying which merch type he is
   const text = scene.add.text(0, 0, `Merchant\n${merchType}`, {

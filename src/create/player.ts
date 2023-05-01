@@ -1,3 +1,4 @@
+import Matter from 'matter-js'
 import Game from '../scenes/game'
 import { getFrameShapeData } from '../utils'
 
@@ -12,6 +13,7 @@ export default function createPlayer(scene: Game, x: number, y: number) {
   player.setFrictionAir(0.0005)
   player.setBounce(0.2)
   player.setFixedRotation()
+  ;(player.body as MatterJS.BodyType).slop = 0
 
   let holding = false
   let facingLeft = false
@@ -42,8 +44,8 @@ export default function createPlayer(scene: Game, x: number, y: number) {
   })
 
   player.update = () => {
-    // player movement
     if (scene.cursors.RIGHT.isDown) {
+      // player movement
       player.setVelocityX(2)
     }
     if (scene.cursors.LEFT.isDown) {

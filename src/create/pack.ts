@@ -22,6 +22,7 @@ export default function createPack(
   pack.setFriction(0.5)
   pack.setFrictionAir(0.0005)
   pack.setBounce(0.9)
+  ;(pack.body as MatterJS.BodyType).slop = 0
 
   pack.order = order
 

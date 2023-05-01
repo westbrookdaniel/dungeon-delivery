@@ -14,6 +14,7 @@ export default class Game extends Phaser.Scene {
   merchs: Phaser.Physics.Matter.Image[] = []
   packs: Pack[] = []
   tileset!: Phaser.Tilemaps.Tileset
+  wallLayer!: Phaser.Tilemaps.TilemapLayer
 
   benchs: Bench[] = []
 
@@ -65,11 +66,22 @@ export default class Game extends Phaser.Scene {
 
     this.map.createLayer('bg', this.tileset)!
 
-    const wallLayer = this.map.createLayer('wall', this.tileset)!
-    wallLayer.setCollisionByProperty({ collides: true })
-    this.matter.world.convertTilemapLayer(wallLayer)
+    this.wallLayer = this.map.createLayer('wall', this.tileset)!
+    this.wallLayer.setCollisionByProperty({ collides: true })
+    this.matter.world.convertTilemapLayer(this.wallLayer)
+    this.wallLayer.forEachTile((tile: any) => {
+      const body = tile.physics?.matterBody?.body
+      if (body) {
+        body.slop = 0
+      }
+    })
 
-    this.matter.world.setBounds(0, 0, wallLayer.width, wallLayer.height)
+    this.matter.world.setBounds(
+      0,
+      0,
+      this.wallLayer.width,
+      this.wallLayer.height
+    )
 
     // ------- debug -------
     // const debugGraphics = this.add.graphics().setAlpha(0.75)
@@ -87,7 +99,12 @@ export default class Game extends Phaser.Scene {
 
     // camera
     this.cameras.main.startFollow(this.player, true, 0.05, 0.05)
-    this.cameras.main.setBounds(0, 0, wallLayer.width, wallLayer.height)
+    this.cameras.main.setBounds(
+      0,
+      0,
+      this.wallLayer.width,
+      this.wallLayer.height
+    )
     this.cameras.main.deadzone = new Phaser.Geom.Rectangle(
       WIDTH / 2 - 20,
       HEIGHT / 2 - 20
